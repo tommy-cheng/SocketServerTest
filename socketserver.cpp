@@ -107,8 +107,13 @@ void SocketServer::readyUdpRead()
     udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
 
     // will write on server side window
-    QTextStream(&strLog) << udpSocket->socketDescriptor() << " Data in: " << datagram << sender.toString() << senderPort;
+    QTextStream(&strLog) << QDateTime::currentDateTime().toString("[dd.MM.yy-hh:mm:ss]") << "-" << udpSocket->socketDescriptor() << " Data in: " << datagram << sender.toString() << senderPort;
     SetLog(strLog);
+}
+
+void SocketServer::UDPErrHandle()
+{
+    ui->leStatus->setText(udpSocket->errorString());
 }
 
 bool SocketServer::StartUDPService()
@@ -127,6 +132,7 @@ bool SocketServer::StartUDPService()
         QTextStream(&strStatus) << "Listening to UDP port " << port << "...";
         ui->leStatus->setText(strStatus);
         connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readyUdpRead()));
+        connect(udpSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(UDPErrHandle()));
         bRet = true;
     }
     return bRet;

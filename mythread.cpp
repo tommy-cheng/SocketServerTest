@@ -36,6 +36,10 @@ void MyThread::run()
     QTextStream(&strStatus) << socketDescriptor << " Client connected";
     w->SetStatus(strStatus);
 
+    strStatus = "";
+    QTextStream(&strStatus) << QDateTime::currentDateTime().toString("[dd.MM.yy-hh:mm:ss]") << "-" << socketDescriptor << " Client connected";
+    w->SetLog(strStatus);
+
     // make this thread a loop,
     // thread will stay alive so that signal/slot to function properly
     // not dropped out in the middle when thread dies
@@ -51,7 +55,7 @@ void MyThread::readyRead()
     QByteArray Data = socket->readAll();
 
     // will write on server side window
-    QTextStream(&strLog) << socketDescriptor << " Data in: " << Data;
+    QTextStream(&strLog) << QDateTime::currentDateTime().toString("[dd.MM.yy-hh:mm:ss]") << "-" << socketDescriptor << " Data in: " << Data;
     w->SetLog(strLog);
 //  socket->write(Data);
 }

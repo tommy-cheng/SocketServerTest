@@ -30,6 +30,7 @@ private slots:
     void on_pbExit_clicked();
     void incomingConnection();
     void readyUdpRead();
+    void UDPErrHandle();
 
 protected:
     void incomingConnection(qintptr socketDescriptor);
