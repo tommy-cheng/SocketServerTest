@@ -5,6 +5,13 @@
 #include "mythread.h"
 #include "ui_socketserver.h"
 
+ConnectStatus::ConnectStatus(QTcpSocket *tcpSocket, QHostAddress ip, int status)
+{
+    this->socket = tcpSocket;
+    this->ip = ip;
+    this->Status = status;
+}
+
 SocketServer::SocketServer(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SocketServer)
@@ -16,6 +23,33 @@ SocketServer::SocketServer(QWidget *parent) :
 SocketServer::~SocketServer()
 {
     delete ui;
+}
+
+void SocketServer::AddConnection(QTcpSocket *tcpSocket, QHostAddress ip, int status)
+{
+    ConnectStatus *cntNew;
+
+    cntNew = new ConnectStatus(tcpSocket, ip, status);
+
+    cntVector.append(cntNew);
+}
+
+void SocketServer::DelConnection(QTcpSocket *tcpSocket)
+{
+    int err = 1, i;
+
+    for (i=0; i<cntVector.size(); i++) {
+        if (cntVector.at(i)->socket == tcpSocket) {
+            err = 0;
+            break;
+        }
+    }
+
+    if (err == 0)
+        cntVector.remove(i);
+    else
+        QMessageBox::information(this, tr("Socket Server"),
+                                 tr("socket is not found"));
 }
 
 void SocketServer::SetStatus(QString strStatus)

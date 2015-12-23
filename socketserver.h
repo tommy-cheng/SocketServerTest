@@ -8,6 +8,15 @@ namespace Ui {
 class SocketServer;
 }
 
+class ConnectStatus {
+public:
+     ConnectStatus(QTcpSocket *, QHostAddress, int);
+     ~ConnectStatus();
+     QTcpSocket *socket;
+     QHostAddress ip;
+     int Status;
+};
+
 class SocketServer : public QDialog
 {
     Q_OBJECT
@@ -16,6 +25,8 @@ public:
     explicit SocketServer(QWidget *parent = 0);
     void SetStatus(QString);
     void SetLog(QString);
+    void AddConnection(QTcpSocket *, QHostAddress, int);
+    void DelConnection(QTcpSocket *);
     ~SocketServer();
 
 private slots:
@@ -36,6 +47,7 @@ protected:
     void incomingConnection(qintptr socketDescriptor);
 
 private:
+    QVector<ConnectStatus *> cntVector;
     Ui::SocketServer *ui;
     QTcpServer *tcpSocketServer;
     QUdpSocket *udpSocket;
