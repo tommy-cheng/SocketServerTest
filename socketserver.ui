@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>364</width>
-    <height>328</height>
+    <width>461</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,8 +85,8 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>110</y>
-     <width>321</width>
+     <y>130</y>
+     <width>401</width>
      <height>181</height>
     </rect>
    </property>
@@ -143,11 +143,73 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>300</y>
-     <width>321</width>
+     <y>500</y>
+     <width>401</width>
      <height>20</height>
     </rect>
    </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>320</y>
+     <width>91</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>[Connection Table]</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>110</y>
+     <width>47</width>
+     <height>12</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>[Log]</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="twCntTbl">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>340</y>
+     <width>401</width>
+     <height>151</height>
+    </rect>
+   </property>
+   <property name="columnCount">
+    <number>7</number>
+   </property>
+   <column>
+    <property name="text">
+     <string>SockDscptr</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>IPAddr</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>PortNo</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Status</string>
+    </property>
+   </column>
+   <column/>
+   <column/>
+   <column/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

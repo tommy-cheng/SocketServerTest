@@ -5,10 +5,11 @@
 #include "mythread.h"
 #include "ui_socketserver.h"
 
-ConnectStatus::ConnectStatus(QTcpSocket *tcpSocket, QHostAddress ip, int status)
+ConnectStatus::ConnectStatus(QTcpSocket *tcpSocket, QHostAddress ip, quint16 port, int status)
 {
     this->socket = tcpSocket;
     this->ip = ip;
+    this->port = port;
     this->Status = status;
 }
 
@@ -17,6 +18,10 @@ SocketServer::SocketServer(QWidget *parent) :
     ui(new Ui::SocketServer)
 {
     ui->setupUi(this);
+
+    ui->twCntTbl->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color:yellow }");
+    ui->twCntTbl->setGridStyle(Qt::SolidLine);
+    ui->twCntTbl->setShowGrid(true);
     bService = false;   
 }
 
@@ -25,13 +30,21 @@ SocketServer::~SocketServer()
     delete ui;
 }
 
-void SocketServer::AddConnection(QTcpSocket *tcpSocket, QHostAddress ip, int status)
+void SocketServer::AddConnection(QTcpSocket *tcpSocket, QHostAddress ip, quint16 port, int status)
 {
     ConnectStatus *cntNew;
+    int rowCnt;
 
-    cntNew = new ConnectStatus(tcpSocket, ip, status);
+    cntNew = new ConnectStatus(tcpSocket, ip, port, status);
 
     cntVector.append(cntNew);
+
+    rowCnt = ui->twCntTbl->rowCount();
+    ui->twCntTbl->insertRow(rowCnt);
+    SetTblData(rowCnt, TBL_SOCK_DESC, QString::number(tcpSocket->socketDescriptor()));
+    SetTblData(rowCnt, TBL_IP, ip.toString());
+    SetTblData(rowCnt, TBL_PORT, QString::number(port));
+    SetTblData(rowCnt, TBL_Status, "Connected");
 }
 
 void SocketServer::DelConnection(QTcpSocket *tcpSocket)
@@ -108,6 +121,15 @@ void SocketServer::incomingConnection()
     thread->start();
 }
 
+void SocketServer::SetTblData(int row, int col, QString data)
+{
+    QTableWidgetItem *qtItem;
+
+    qtItem = new QTableWidgetItem(data);
+    qtItem->setTextAlignment(Qt::AlignCenter);
+    ui->twCntTbl->setItem(row, col, qtItem);
+}
+
 bool SocketServer::StartTCPService()
 {
     int port;
@@ -116,6 +138,7 @@ bool SocketServer::StartTCPService()
 
     tcpSocketServer = new QTcpServer(this);
     port = ui->lePortNo->text().toInt();
+    ui->twCntTbl->setColumnCount(4);
     if(!tcpSocketServer->listen(QHostAddress::Any,port)) {
 
         QMessageBox::critical(this, "Socket Server", tcpSocketServer->errorString());
@@ -125,6 +148,12 @@ bool SocketServer::StartTCPService()
         QTextStream(&strStatus) << "Listening to TCP port " << port << "...";
         ui->leStatus->setText(strStatus);
         connect(tcpSocketServer, SIGNAL(newConnection()), this, SLOT(incomingConnection()));
+
+        ui->twCntTbl->insertRow(0);
+        SetTblData(0, TBL_SOCK_DESC, QString::number(tcpSocketServer->socketDescriptor()));
+        SetTblData(0, TBL_IP, "0");
+        SetTblData(0, TBL_PORT, "0");
+        SetTblData(0, TBL_Status, "Listen");
         bRet = true;
     }
     return bRet;
@@ -159,7 +188,8 @@ bool SocketServer::StartUDPService()
     udpSocket = new QUdpSocket(this);
     port = ui->lePortNo->text().toInt();
     if (!udpSocket->bind(QHostAddress::Any, port)) {
-        QMessageBox::critical(this, "Socket Server", udpSocket->errorString());
+
+
         bRet = false;
     }
     else {

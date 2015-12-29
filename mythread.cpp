@@ -25,7 +25,7 @@ void MyThread::run()
         return;
     }
 
-    w->AddConnection(socket, socket->peerAddress(), 1);
+    w->AddConnection(socket, socket->peerAddress(), socket->peerPort(), 1);
     // connect socket and signal
     // note - Qt::DirectConnection is used because it's multithreaded
     //        This makes the slot to be invoked immediately, when the signal is emitted.

@@ -10,10 +10,11 @@ class SocketServer;
 
 class ConnectStatus {
 public:
-     ConnectStatus(QTcpSocket *, QHostAddress, int);
+     ConnectStatus(QTcpSocket *, QHostAddress, quint16, int);
      ~ConnectStatus();
      QTcpSocket *socket;
      QHostAddress ip;
+     quint16 port;
      int Status;
 };
 
@@ -25,7 +26,7 @@ public:
     explicit SocketServer(QWidget *parent = 0);
     void SetStatus(QString);
     void SetLog(QString);
-    void AddConnection(QTcpSocket *, QHostAddress, int);
+    void AddConnection(QTcpSocket *, QHostAddress, quint16, int);
     void DelConnection(QTcpSocket *);
     ~SocketServer();
 
@@ -57,6 +58,10 @@ private:
     void SetPBStatus();
     bool StartTCPService();
     bool StartUDPService();
+    void SetTblData(int , int , QString );
+    enum twTblColIndex {
+        TBL_SOCK_DESC, TBL_IP, TBL_PORT, TBL_Status
+    };
 };
 
 #endif // SOCKETSERVER_H
