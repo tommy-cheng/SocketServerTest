@@ -175,7 +175,7 @@
     <string>[Log]</string>
    </property>
   </widget>
-  <widget class="QTableWidget" name="twCntTbl">
+  <widget class="QTableView" name="tvCntTbl">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -184,32 +184,6 @@
      <height>151</height>
     </rect>
    </property>
-   <property name="columnCount">
-    <number>7</number>
-   </property>
-   <column>
-    <property name="text">
-     <string>SockDscptr</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>IPAddr</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>PortNo</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Status</string>
-    </property>
-   </column>
-   <column/>
-   <column/>
-   <column/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

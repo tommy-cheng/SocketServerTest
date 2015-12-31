@@ -25,7 +25,7 @@ void MyThread::run()
         return;
     }
 
-    w->AddConnection(socket, socket->peerAddress(), socket->peerPort(), 1);
+ //   w->AddConnection(socket->socketDescriptor(), socket->peerAddress(), socket->peerPort(), CNT_STATUS_CONNECTED);
     // connect socket and signal
     // note - Qt::DirectConnection is used because it's multithreaded
     //        This makes the slot to be invoked immediately, when the signal is emitted.
@@ -37,7 +37,7 @@ void MyThread::run()
     QTextStream(&strStatus) << socketDescriptor << " Client connected";
     w->SetStatus(strStatus);
 
-    strStatus = "";
+//  strStatus = "";
     QTextStream(&strStatus) << QDateTime::currentDateTime().toString("[dd.MM.yy-hh:mm:ss]") << "-" << socketDescriptor << " Client connected";
     w->SetLog(strStatus);
 
@@ -67,7 +67,7 @@ void MyThread::disconnected()
 
     QTextStream(&strLog) << socketDescriptor << " Disconnected";
     w->SetLog(strLog);
-    w->DelConnection(socket);
+    w->DelConnection(socketDescriptor);
     socket->deleteLater();
     exit(0);
 }

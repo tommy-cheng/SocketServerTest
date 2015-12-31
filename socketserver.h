@@ -8,11 +8,14 @@ namespace Ui {
 class SocketServer;
 }
 
-class ConnectStatus {
+class MyModel;          // forward declration
+
+class ConnectStatus
+{
 public:
-     ConnectStatus(QTcpSocket *, QHostAddress, quint16, int);
+     ConnectStatus(int, QHostAddress, quint16, int);
      ~ConnectStatus();
-     QTcpSocket *socket;
+     int sockDscrpt;
      QHostAddress ip;
      quint16 port;
      int Status;
@@ -24,11 +27,13 @@ class SocketServer : public QDialog
 
 public:
     explicit SocketServer(QWidget *parent = 0);
+    ~SocketServer();
     void SetStatus(QString);
     void SetLog(QString);
-    void AddConnection(QTcpSocket *, QHostAddress, quint16, int);
-    void DelConnection(QTcpSocket *);
-    ~SocketServer();
+    void AddConnection(int, QHostAddress, quint16, int);
+    void DelConnection(int);
+    int GetConnCnt();
+    QString GetCntString(int , int );
 
 private slots:
 
@@ -53,15 +58,16 @@ private:
     QTcpServer *tcpSocketServer;
     QUdpSocket *udpSocket;
     bool bService;
+    MyModel *myModel;
 
     void ServiceIsOn();
     void SetPBStatus();
     bool StartTCPService();
     bool StartUDPService();
-    void SetTblData(int , int , QString );
-    enum twTblColIndex {
-        TBL_SOCK_DESC, TBL_IP, TBL_PORT, TBL_Status
-    };
+};
+
+enum tvConnectStatus {
+   CNT_STATUS_LISTEN, CNT_STATUS_CONNECTED, CNT_STATUS_CLOSED
 };
 
 #endif // SOCKETSERVER_H

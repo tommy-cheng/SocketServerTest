@@ -15,9 +15,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         socketserver.cpp \
-    mythread.cpp
+    mythread.cpp \
+    mymodel.cpp
+
 
 HEADERS  += socketserver.h \
-    mythread.h
+    mythread.h \
+    mymodel.h
 
 FORMS    += socketserver.ui
