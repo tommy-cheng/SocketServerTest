@@ -31,6 +31,8 @@ SocketServer::SocketServer(QWidget *parent) :
     ui->tvCntTbl->horizontalHeader()->setStyleSheet("QHeaderView::section { background-color:yellow }");
     ui->tvCntTbl->setGridStyle(Qt::SolidLine);
     ui->tvCntTbl->setShowGrid(true);
+    ui->tvCntTbl->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tvCntTbl->setSelectionMode(QAbstractItemView::SingleSelection);
     bService = false;   
 }
 
@@ -82,32 +84,32 @@ void SocketServer::DelConnection(int sockDesc)
                                  tr("socket is not found"));
 }
 
-QString SocketServer::GetCntString(int idx, int item)
+QString SocketServer::GetCntString(int row, int col)
 {
     QString strRet(QString::null);
     int size;
 
     size = cntVector.size();
-    if (idx >= size) {
+    if (row >= size) {
         qDebug() << QString("GetCntString idx is too big[vector:%1, idx:%2]")
-                    .arg(size).arg(idx);
+                    .arg(size).arg(row);
     }
     else {
-        switch (item) {
+        switch (col) {
         case TBL_SOCK_DESC:
-            strRet = QString::number(cntVector.at(idx)->sockDscrpt);
+            strRet = QString::number(cntVector.at(row)->sockDscrpt);
             break;
 
         case TBL_IP:
-            strRet = cntVector.at(idx)->ip.toString();
+            strRet = cntVector.at(row)->ip.toString();
             break;
 
         case TBL_PORT:
-            strRet = QString::number(cntVector.at(idx)->port);
+            strRet = QString::number(cntVector.at(row)->port);
             break;
 
         case TBL_STATUS:
-            switch (cntVector.at(idx)->Status) {
+            switch (cntVector.at(row)->Status) {
             case CNT_STATUS_LISTEN:
                 strRet = "Listen";
                 break;
@@ -274,8 +276,10 @@ void SocketServer::on_lePortNo_selectionChanged()
 
 void SocketServer::on_pbStopService_clicked()
 {
-    if (ui->rbTCP->isChecked())
+    if (ui->rbTCP->isChecked()) {
+        DelConnection(tcpSocketServer->socketDescriptor());
         tcpSocketServer->close();
+    }
     else
         udpSocket->close();
     bService = false;
@@ -288,4 +292,23 @@ void SocketServer::on_pbStopService_clicked()
 void SocketServer::on_pbExit_clicked()
 {
     close();
+}
+
+void SocketServer::on_tvCntTbl_doubleClicked(const QModelIndex &index)
+{
+    QString SockDesc, IP, Port;
+    QModelIndexList selection = ui->tvCntTbl->selectionModel()->selectedRows();
+
+     Q_UNUSED(index);
+    // Multiple rows can be selected
+    for(int i=0; i< selection.count(); i++) {
+        QModelIndex index = selection.at(i);
+        qDebug() << index.row();
+        commDlg = new commDialog(this);
+        SockDesc = GetCntString(index.row(),TBL_SOCK_DESC);
+        IP = GetCntString(index.row(),TBL_IP);
+        Port = GetCntString(index.row(), TBL_PORT);
+        commDlg->setCommData(SockDesc, IP, Port);
+        commDlg->exec();
+    }
 }

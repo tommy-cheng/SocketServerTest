@@ -1,8 +1,10 @@
+
 #ifndef SOCKETSERVER_H
 #define SOCKETSERVER_H
 
 #include <QDialog>
 #include <QtNetwork>
+#include "commdialog.h"
 
 namespace Ui {
 class SocketServer;
@@ -49,6 +51,8 @@ private slots:
     void readyUdpRead();
     void UDPErrHandle();
 
+    void on_tvCntTbl_doubleClicked(const QModelIndex &index);
+
 protected:
     void incomingConnection(qintptr socketDescriptor);
 
@@ -59,6 +63,7 @@ private:
     QUdpSocket *udpSocket;
     bool bService;
     MyModel *myModel;
+    commDialog *commDlg;
 
     void ServiceIsOn();
     void SetPBStatus();

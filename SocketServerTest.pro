@@ -16,11 +16,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         socketserver.cpp \
     mythread.cpp \
-    mymodel.cpp
+    mymodel.cpp \
+    commdialog.cpp
 
 
 HEADERS  += socketserver.h \
     mythread.h \
-    mymodel.h
+    mymodel.h \
+    commdialog.h
 
-FORMS    += socketserver.ui
+FORMS    += socketserver.ui \
+    commdialog.ui
